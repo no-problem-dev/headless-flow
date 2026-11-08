@@ -1,5 +1,5 @@
 {
-  "name": "store-flow",
+  "name": "headless-flow",
   "version": "0.1.0",
   "private": true,
   "description": "Drive an app's state CLI (NDJSON over stdin/stdout) from TypeScript flow tests.",

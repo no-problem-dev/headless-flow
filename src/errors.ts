@@ -1,6 +1,6 @@
 import type { ErrorCode } from './protocol.ts';
 
-/** Base class for everything store-flow throws. */
+/** Base class for everything headless-flow throws. */
 export class FlowError extends Error {
   override name = 'FlowError';
 }

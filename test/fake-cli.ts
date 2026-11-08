@@ -1,4 +1,4 @@
-// A tiny CLI speaking protocol 1, for store-flow's own tests. Run with `bun test/fake-cli.ts [flags]`.
+// A tiny CLI speaking protocol 1, for headless-flow's own tests. Run with `bun test/fake-cli.ts [flags]`.
 //
 // Stores:
 //   counter  state {value}      ops: inc {by:number}, slowInc {by:number, ms:number}, boom {}

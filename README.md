@@ -1,4 +1,4 @@
-# store-flow
+# headless-flow
 
 Drive an app's **state CLI** from TypeScript flow tests. The CLI exposes the app's stores (the layer right below the UI) over NDJSON on stdin/stdout, so the same scenario file can run against the iOS and the Android build of the app, with no UI involved.
 
@@ -20,7 +20,7 @@ Answers are `{"id":n,"ok":true,"result":...}` or `{"id":n,"ok":false,"error":{"c
 ## API
 
 ```ts
-import { launch, platformCommand } from 'store-flow';
+import { launch, platformCommand } from 'headless-flow';
 
 const app = await launch({
   command: platformCommand(repoRoot, {

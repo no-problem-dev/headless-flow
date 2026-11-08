@@ -225,7 +225,7 @@ export class App {
       // Before ready, tolerate build tools chatting on stdout.
       if (isObject(message) && message.ready === true) {
         if (message.protocol !== PROTOCOL_VERSION) {
-          this.fail(new ProcessError(`CLI speaks protocol ${String(message.protocol)}, store-flow speaks ${PROTOCOL_VERSION}`, this.stderrText));
+          this.fail(new ProcessError(`CLI speaks protocol ${String(message.protocol)}, headless-flow speaks ${PROTOCOL_VERSION}`, this.stderrText));
           this.child.kill('SIGKILL');
           return;
         }
@@ -238,10 +238,10 @@ export class App {
       return;
     }
 
-    // The CLI could not read a line at all (bad_request with id null). store-flow never sends such lines,
+    // The CLI could not read a line at all (bad_request with id null). headless-flow never sends such lines,
     // so there is no call to fail; keep it visible in stderr diagnostics instead of killing the session.
     if (isObject(message) && message.id === null && message.ok === false) {
-      this.stderrText = `${this.stderrText}[store-flow] CLI answered id:null: ${line}\n`.slice(-STDERR_KEEP);
+      this.stderrText = `${this.stderrText}[headless-flow] CLI answered id:null: ${line}\n`.slice(-STDERR_KEEP);
       return;
     }
 
