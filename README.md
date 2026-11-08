@@ -2,7 +2,9 @@
 
 Drive an app's **state CLI** from TypeScript flow tests. The CLI exposes the app's stores (the layer right below the UI) over NDJSON on stdin/stdout, so the same scenario file can run against the iOS and the Android build of the app, with no UI involved.
 
-Zero runtime dependencies. Runs on Bun (and Node, since it only uses `node:child_process`).
+It can also connect to a running app (a DEBUG build serving the same protocol on a local port) and drive it the same way.
+
+Zero runtime dependencies. Runs on Bun (and Node, since it only uses `node:child_process` and `node:net`).
 
 ## Protocol (version 1)
 
@@ -44,6 +46,22 @@ await app.close();                                // sends quit; kills after a t
 - Errors: `ProtocolError` (`.code`, the CLI said `ok:false`), `ProcessError` (`.stderr`, the CLI failed to start, died or broke the protocol), `UntilTimeoutError` (`.lastState`). All extend `FlowError`.
 - `App` implements `Symbol.asyncDispose`, so `await using app = await launch(...)` closes it.
 
+### Connecting to a running app
+
+```ts
+import { connect } from 'headless-flow';
+
+// e.g. the simulator app launched with: xcrun simctl launch booted <bundle-id> -HeadlessPort 9500
+const app = await connect({ port: 9500 });   // host defaults to 127.0.0.1
+await app.get('home');
+await app.close();                            // disconnects only; the app keeps running
+```
+
+- `connect({ port, host = '127.0.0.1', readyTimeoutMs = 10000, requestTimeoutMs? })` opens a TCP connection and resolves after the ready line the app sends on connect. It returns the same `App` (`ls` / `get` / `do` / `until` / `close`).
+- `close()` does not send `quit`; it just disconnects. `pid` is `undefined`.
+- A refused connection, a missing ready line or the app dropping the connection all surface as `ProcessError`.
+- On the Swift side, `HeadlessSocketServer` in [swift-headless](https://github.com/no-problem-dev/swift-headless) (0.2.0+) serves this.
+
 ## Platforms
 
 `platformCommand(root, targets, platform = currentPlatform())` reads `FLOW_PLATFORM=ios|android`:
@@ -55,6 +73,6 @@ await app.close();                                // sends quit; kills after a t
 
 ```sh
 bun install
-bun test        # runs against test/fake-cli.ts, a tiny CLI implementing the protocol
+bun test        # runs against test/fake-cli.ts and test/fake-socket-server.ts, tiny implementations of the protocol
 bun run typecheck
 ```

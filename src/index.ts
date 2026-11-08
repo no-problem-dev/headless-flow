@@ -1,4 +1,4 @@
-export { App, launch, type LaunchOptions, type State, type UntilOptions } from './app.ts';
+export { App, connect, launch, type ConnectOptions, type LaunchOptions, type State, type UntilOptions } from './app.ts';
 export { FlowError, ProcessError, ProtocolError, UntilTimeoutError } from './errors.ts';
 export { currentPlatform, platformCommand, type Platform, type PlatformTargets } from './platform.ts';
 export {

@@ -1,8 +1,8 @@
 {
   "name": "headless-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Drive an app's state CLI (NDJSON over stdin/stdout) from TypeScript flow tests.",
+  "description": "Drive an app's state CLI (NDJSON over stdin/stdout) from TypeScript flow tests, or connect to a running app over a local socket.",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
