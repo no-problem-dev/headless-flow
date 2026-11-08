@@ -14,7 +14,7 @@ import {
 export type State = Record<string, unknown>;
 
 export interface LaunchOptions {
-  /** The program and its fixed leading args, e.g. `['swift', 'run', '--package-path', 'ios/Packages/State', 'gohobi-cli']`. */
+  /** The program and its fixed leading args, e.g. `['swift', 'run', '--package-path', 'ios/Packages/CLI', 'gohobi-cli']`. */
   command: string[];
   /** Appended after `command` (the per-run flags such as `--api-base`). */
   args?: string[];
@@ -235,6 +235,13 @@ export class App {
       } else {
         this.preamble = [...this.preamble, line].slice(-20);
       }
+      return;
+    }
+
+    // The CLI could not read a line at all (bad_request with id null). store-flow never sends such lines,
+    // so there is no call to fail; keep it visible in stderr diagnostics instead of killing the session.
+    if (isObject(message) && message.id === null && message.ok === false) {
+      this.stderrText = `${this.stderrText}[store-flow] CLI answered id:null: ${line}\n`.slice(-STDERR_KEEP);
       return;
     }
 

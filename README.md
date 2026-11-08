@@ -24,7 +24,7 @@ import { launch, platformCommand } from 'store-flow';
 
 const app = await launch({
   command: platformCommand(repoRoot, {
-    ios: { packagePath: 'ios/Packages/State', product: 'my-cli' },
+    ios: { packagePath: 'ios/Packages/CLI', product: 'my-cli' },
     android: { executable: 'android/cli/build/install/cli/bin/cli' },
   }),
   args: ['--api-base', url],

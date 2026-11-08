@@ -102,6 +102,15 @@ describe('get / do', () => {
   });
 });
 
+test('an id:null bad_request answer is not fatal', async () => {
+  const app = await start();
+  // garble is a fake-only command (not in the protocol) that makes the CLI emit an id:null error first
+  const result = await (app as any).send({ id: 0, cmd: 'garble' });
+  expect(result).toEqual({ name: 'counter', state: { value: 0 } });
+  expect(app.stderr).toContain('id:null');
+  expect(await app.get('counter')).toEqual({ value: 0 });
+});
+
 describe('until', () => {
   test('polls until the predicate holds', async () => {
     const app = await start();
@@ -143,12 +152,12 @@ describe('close', () => {
 
 describe('platformCommand', () => {
   const targets = {
-    ios: { packagePath: 'ios/Packages/State', product: 'gohobi-cli' },
+    ios: { packagePath: 'ios/Packages/CLI', product: 'gohobi-cli' },
     android: { executable: 'android/cli/build/install/cli/bin/cli' },
   };
 
   test('ios is swift run on the package', () => {
-    expect(platformCommand('/repo', targets, 'ios')).toEqual(['swift', 'run', '--package-path', '/repo/ios/Packages/State', 'gohobi-cli']);
+    expect(platformCommand('/repo', targets, 'ios')).toEqual(['swift', 'run', '--package-path', '/repo/ios/Packages/CLI', 'gohobi-cli']);
   });
 
   test('android is the installDist launcher', () => {

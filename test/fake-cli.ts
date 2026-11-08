@@ -88,8 +88,12 @@ async function handle(line: string) {
         await op.run(req.args ?? {});
         return out({ id, ok: true, result: { name: req.store, state: s.state() } });
       }
+      case 'garble':
+        // answer like a CLI that could not parse a line, then answer normally
+        out({ id: null, ok: false, error: { code: 'bad_request', message: 'not json' } });
+        return out({ id, ok: true, result: { name: 'counter', state: stores.counter!.state() } });
       case 'quit':
-        out({ id, ok: true, result: null });
+        out({ id, ok: true, result: {} });
         if (!flag('--ignore-quit')) process.exit(0);
         return;
       default:
